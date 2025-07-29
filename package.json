@@ -1,0 +1,16 @@
+{
+  "name": "connected-family",
+  "version": "1.0.0",
+  "description": "Keep tabs on my family members.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christian Tirado",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "graphql": "^16.11.0",
+    "graphql-http": "^1.22.4"
+  }
+}
