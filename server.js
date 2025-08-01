@@ -1,21 +1,29 @@
-import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
+import { buildSchema } from 'graphql';
 import { createHandler } from 'graphql-http/lib/use/express';
 import express from 'express';
  import { ruruHTML } from 'ruru/server';
-
+import FamilyMember from './FamilyMember.js';
 // Construct a schema
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'Query',
-    fields: {
-      hello: { 
-        type: GraphQLString,
-        resolve: () => 'Hello world!'
-      },
+const schema = buildSchema(`
+    type FamilyMember {
+    id: ID!
+    name: String!
+    dob: String!
+    relationship: String!
+    }
+
+    type Query {
+    getFamilyMember(id: ID): FamilyMember
+    }
+    
+`);
+
+const id = 1;
+const root = {
+    getFamilyMember(id){
+        return new FamilyMember("1", "John Smith", "01/01/2000", "Father");
     },
-  }),
-});
- 
+}
 const app = express();
  
 // Create and use the GraphQL handler.
@@ -23,6 +31,7 @@ app.all(
   '/graphql',
   createHandler({
     schema: schema,
+    rootValue: root
   }),
 );
 
