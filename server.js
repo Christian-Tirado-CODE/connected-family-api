@@ -3,7 +3,18 @@ import { createHandler } from 'graphql-http/lib/use/express';
 import express from 'express';
  import { ruruHTML } from 'ruru/server';
 import FamilyMember from './FamilyMember.js';
-// Construct a schema
+
+/*  
+Product MVP features:
+- Show list of family members
+- Add family member
+- Remove family member
+- Modify family member
+- Authentication
+- Account creation
+
+*/
+
 const schema = buildSchema(`
     type FamilyMember {
     id: ID!
@@ -13,15 +24,23 @@ const schema = buildSchema(`
     }
 
     type Query {
+    getFamilyMembers: [FamilyMember]
     getFamilyMember(id: ID): FamilyMember
     }
     
 `);
 
-const id = 1;
+const familyMembers = [
+    new FamilyMember("1", "John Smith", "01/01/2000", "Father"),
+     new FamilyMember("2", "Mary Smith", "02/02/1990", "Mother")
+    ];
+
 const root = {
-    getFamilyMember(id){
-        return new FamilyMember("1", "John Smith", "01/01/2000", "Father");
+    getFamilyMember({id}){
+        return familyMembers.find(fm => fm.id === id);
+    },
+    getFamilyMembers(){
+        return familyMembers;
     },
 }
 const app = express();
