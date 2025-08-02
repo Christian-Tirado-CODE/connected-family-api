@@ -29,6 +29,10 @@ const schema = buildSchema(`
     relationship: String!
     }
 
+    input RemoveFamilyMemberInput {
+      id: ID!
+    }
+
     type Query {
     getFamilyMembers: [FamilyMember]
     getFamilyMember(id: ID): FamilyMember
@@ -36,11 +40,12 @@ const schema = buildSchema(`
 
     type Mutation {
      addNewFamilyMember(input: NewFamilyMemberInput): FamilyMember
+     removeFamilyMember(input: RemoveFamilyMemberInput): FamilyMember
     }
     
 `);
 
-const familyMembers = [
+let familyMembers = [
     new FamilyMember("1", "John Smith", "01/01/2000", "Father"),
      new FamilyMember("2", "Mary Smith", "02/02/1990", "Mother")
     ];
@@ -53,10 +58,15 @@ const root = {
         return familyMembers;
     },
     addNewFamilyMember({input}){
-        const id = familyMembers.length;
+        const id = String(familyMembers.length + 1);
         const newFamilyMember = new FamilyMember(id, input.name, input.dob, input.relationship);
         familyMembers.push(newFamilyMember);
         return newFamilyMember;
+    },
+    removeFamilyMember({input}){
+        const familyMember = familyMembers.find(fm => fm.id === input.id);
+        familyMembers = familyMembers.filter(fm => fm.id !== input.id);
+        return {id: familyMember.id};
     }
 }
 const app = express();
