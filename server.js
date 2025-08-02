@@ -23,9 +23,19 @@ const schema = buildSchema(`
     relationship: String!
     }
 
+    input NewFamilyMemberInput {
+    name: String!
+    dob: String!
+    relationship: String!
+    }
+
     type Query {
     getFamilyMembers: [FamilyMember]
     getFamilyMember(id: ID): FamilyMember
+    }
+
+    type Mutation {
+     addNewFamilyMember(input: NewFamilyMemberInput): FamilyMember
     }
     
 `);
@@ -42,6 +52,12 @@ const root = {
     getFamilyMembers(){
         return familyMembers;
     },
+    addNewFamilyMember({input}){
+        const id = familyMembers.length;
+        const newFamilyMember = new FamilyMember(id, input.name, input.dob, input.relationship);
+        familyMembers.push(newFamilyMember);
+        return newFamilyMember;
+    }
 }
 const app = express();
  
