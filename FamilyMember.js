@@ -14,7 +14,7 @@ class FamilyMember {
         return this.name;
     }
     dob(){
-        return this.relationship;
+        return this.dob;
     }
    relationship(){
     return this.relationship;
