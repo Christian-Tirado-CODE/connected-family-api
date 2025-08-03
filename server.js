@@ -3,6 +3,9 @@ import { createHandler } from 'graphql-http/lib/use/express';
 import express from 'express';
  import { ruruHTML } from 'ruru/server';
 import FamilyMember from './FamilyMember.js';
+import pgPromise from 'pg-promise';
+import 'dotenv/config';
+
 
 /*  
 Product MVP features:
@@ -12,9 +15,18 @@ Product MVP features:
 - Modify family member
 - Authentication
 - Account creation
-
 */
 
+const initOptions = {};
+const pgp = pgPromise(initOptions);
+const db = pgp(process.env.DATABASE_URL);
+
+db.one('SELECT * FROM family_member;')
+  .then((data) => {
+    console.log('DATA:', data)
+  })
+  .catch((error) => {
+  });
 const schema = buildSchema(`
     type FamilyMember {
     id: ID!
